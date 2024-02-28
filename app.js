@@ -51,9 +51,19 @@ app.post ('/todos/add', (req, res) => {
     console.log(todo)
 
     todos.push(todo)
-    res.json(todos)
+    res.json({
+        index: todos.length - 1  //
+    })
 })
 
+// Add a delete request handler for the todos route
+app.delete ('/todos/delete/:index', (req, res) => {
+    console.log(req.params)
+    const index = req.params.index
+    todos.splice(index, 1)
+    res.json(todos)
+
+})
 
 
 // Start the server
