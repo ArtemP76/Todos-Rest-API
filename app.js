@@ -17,7 +17,7 @@ const helloWorld = (req, res) => {
 const todos = [  // Define a global array of todos
     "buy apples"
 ]
-app.get('/hello', helloWorld)
+app.get('/about', helloWorld)
 
 
 app.get('/todos/all', (req, response) => {
@@ -28,6 +28,14 @@ app.get('/todos/all', (req, response) => {
   //     "buy chocolate",
   // ]
   response.json(todos)
+})
+
+app.get('/todos/search', (req, response) => { //Search a todo by text Example^: /todos/search?text="abc"
+    const text = req.query.text
+    console.log("-----> " + req.query)
+    const result = todos.find((element) => element.includes(text)); //  Find a todo by text
+    response.json(result)//  Send a JSON response
+
 })
 
 app.get('/todos/:index', (req, response) => {
@@ -45,6 +53,8 @@ app.get('/todos/:index', (req, response) => {
 
 })
 
+
+
 // Add a post request handler for the todos route
 app.post ('/todos/add', (req, res) => {
     const todo = req.body.text //
@@ -60,8 +70,17 @@ app.post ('/todos/add', (req, res) => {
 app.delete ('/todos/delete/:index', (req, res) => {
     console.log(req.params)
     const index = req.params.index
-    todos.splice(index, 1)
-    res.json(todos)
+    const removedTodos = todos.splice(index, 1)
+    res.json(removedTodos)
+
+})
+
+app.put ('/todos/update/:index', (req, res) => {
+    //console.log(req.params)
+    const index = req.params.index
+    const todo = req.body.text
+    const removedTodos = todos.splice(index, 1, todo)
+    res.json(removedTodos)
 
 })
 

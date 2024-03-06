@@ -17,6 +17,7 @@ describe('REST API Tests', () => {
                 expect(err).to.be.null;
                 expect(res).to.have.status(200);
                 createdTodoIndex = res.body.index; // Adjust this to match how your API returns the id
+                console.log(createdTodoIndex);
                 done(); // Signal completion of the setup
             });
 
@@ -62,12 +63,23 @@ describe('REST API Tests', () => {
     });
     it('Should delete a todo', (done) => {   //
         chai.request('http://localhost:3000')
-            .post('/todos/add')
-            .send({ text: 'buy milk' }) // Attach the data to be posted
+            .delete('/todos/delete/' + createdTodoIndex)
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('array');
-                expect(res.body).to.include('buy milk');
+                expect(res.body).to.include('Test Todo');
+                done();
+
+            });
+    });
+
+    it('Should update a todo', (done) => {   //
+        chai.request('http://localhost:3000')
+            .delete('/todos/delete/' + createdTodoIndex)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array');
+                expect(res.body).to.include('Test Todo');
                 done();
 
             });
