@@ -46,6 +46,29 @@ describe('REST API Tests', () => {
                 done();
             });
     });
+    it('Should not get a todo by a wrong ID - below boundaries', (done) => {   //
+        chai.request('http://localhost:3000')
+            .get('/todos/-1')
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property("message").to.be.equal("Todo is not found");
+                done();
+            });
+    });
+
+    it('Should not get a todo by a wrong ID - beyond boundaries', (done) => {   //
+        chai.request('http://localhost:3000')
+            .get('/todos/100000')
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property("message").to.be.equal("Todo is not found");
+                done();
+            });
+    });
+
+
     it('Should post a new todo', (done) => {   //
         chai.request('http://localhost:3000')
             .post('/todos/add')
@@ -61,6 +84,22 @@ describe('REST API Tests', () => {
                 done();
             });
     });
+
+    it('Should not post a todo with the length exceeding 200 chars - NEGATIVE', (done) => {   //
+        chai.request('http://localhost:3000')// Обращаемся к порту, на котором запущено приложение
+            .post('/todos/add') //
+            .send({ text: "a".repeat(201) }) // Attach the data to be posted
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('message').to.be.a('string');
+                expect(res.body).to.have.property("message").to.be.equal("A todo should not be longer than 200 characters")
+
+                //expect(res.body).to.equal();
+                done();
+            });
+    });
+
     it('Should delete a todo', (done) => {   //
         chai.request('http://localhost:3000')
             .delete('/todos/delete/' + createdTodoIndex)
