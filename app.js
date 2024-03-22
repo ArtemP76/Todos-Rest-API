@@ -76,6 +76,23 @@ app.post ('/todos/add', (req, res) => {
         });
         return
     }
+    if (todo.length < 1 ){
+        res.status(400);
+        res.send({
+            message: 'A todo field should not be empty'
+        });
+        return
+    }
+    const pattern = /^[a-z0-9A-Z '!.,?;]+$/;
+    const isLatin = pattern.test(todo);
+    if(!isLatin) {
+        res.status(400)
+        res.send({
+            message: 'Allowed characters are: A - Z,.?!;'
+        })
+        return
+    }
+
 
     todos.push(todo)
     res.json({

@@ -100,6 +100,36 @@ describe('REST API Tests', () => {
             });
     });
 
+    it('Should not post a todo with the empty field - NEGATIVE', (done) => {   //
+        chai.request('http://localhost:3000')// Обращаемся к порту, на котором запущено приложение
+            .post('/todos/add') //
+            .send({ text: ""}) // Attach the data to be posted
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('message').to.be.a('string');
+                expect(res.body).to.have.property("message").to.be.equal("A todo field should not be empty")
+
+                //expect(res.body).to.equal();
+                done();
+            });
+    });
+
+    it('Should not post a todo with the not allowed chars - NEGATIVE', (done) => {   //
+        chai.request('http://localhost:3000')// Обращаемся к порту, на котором запущено приложение
+            .post('/todos/add') //
+            .send({ text: "Купи яблок!"}) // Attach the data to be posted
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('message').to.be.a('string');
+                expect(res.body).to.have.property("message").to.be.equal("Allowed characters are: A - Z,.?!;")
+
+                //expect(res.body).to.equal();
+                done();
+            });
+    });
+
     it('Should delete a todo', (done) => {   //
         chai.request('http://localhost:3000')
             .delete('/todos/delete/' + createdTodoIndex)
