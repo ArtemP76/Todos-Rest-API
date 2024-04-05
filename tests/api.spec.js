@@ -142,6 +142,32 @@ describe('REST API Tests', () => {
             });
     });
 
+    it('Should not delete a non-existing todo', (done) => {   //
+        chai.request('http://localhost:3000')
+            .delete('/todos/delete/' + createdTodoIndex + 1)
+            .end((err, res) => { // Завершающая функция библиотеки chai после получения ответа на запрос
+                expect(res).to.have.status(404);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('message').to.be.a('string');
+                expect(res.body).to.have.property("message").to.be.equal("Cannot delete a requested todo")
+                done();
+
+            });
+    });
+
+    it('Should not delete a todo by a non-number argument -NEG', (done) => {   //
+        chai.request('http://localhost:3000')
+            .delete('/todos/delete/' + 'string')
+            .end((err, res) => { // Завершающая функция библиотеки chai после получения ответа на запрос
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('message').to.be.a('string');
+                expect(res.body).to.have.property("message").to.be.equal("Cannot delete a todo by a non-number character")
+                done();
+
+            });
+    });
+
     it('Should update a todo', (done) => {   //
         chai.request('http://localhost:3000')
             .delete('/todos/delete/' + createdTodoIndex)

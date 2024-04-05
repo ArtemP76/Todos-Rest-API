@@ -104,10 +104,32 @@ app.post ('/todos/add', (req, res) => {
 app.delete ('/todos/delete/:index', (req, res) => {
     console.log(req.params)
     const index = req.params.index
+    const regex = /^[^0-9]+$/
+    const isNonNumber = regex.test(index)
+    if (isNonNumber === true){
+        res.status(400)
+        res.send({
+            message: 'Cannot delete a todo by a non-number character'
+        })
+        return
+    }
+
+    //    0          1
+    // ['todo1', 'jtodo2']    index = 2
+    if (index < 0 || index > todos.length - 1) {
+        res.status(404)
+        res.send({
+            message: "Cannot delete a requested todo"
+        })
+        return
+    }
+
+
     const removedTodos = todos.splice(index, 1)
     res.json(removedTodos)
+    })
 
-})
+
 
 app.put ('/todos/update/:index', (req, res) => {
     //console.log(req.params)
