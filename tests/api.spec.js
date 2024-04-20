@@ -170,11 +170,12 @@ describe('REST API Tests', () => {
 
     it('Should update a todo', (done) => {   //
         chai.request('http://localhost:3000')
-            .delete('/todos/delete/' + createdTodoIndex)
+            .patch('/todos/update/' + createdTodoIndex)
+            .send({ text: "Купи яблок!"})
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('array');
-                expect(res.body).to.include('Test Todo');
+                expect(res.body).to.include("Test Todo");
                 done();
 
             });
